@@ -1,5 +1,5 @@
 import math
-import iptrack
+from iptrack import *
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
@@ -41,7 +41,7 @@ def exp_fit_avg(folder, number):
     cov_c = 0
     cov_lam = 0
     for i in range(1, number+1):
-        data = np.loadtxt(str(folder)+"\data_"+str(i),skiprows=1)
+        data = np.loadtxt("./" + str(folder)+"/data_"+str(i),skiprows=1)
         ydata = []
         tdata = [] 
 
