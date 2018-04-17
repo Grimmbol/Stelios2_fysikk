@@ -1,0 +1,17 @@
+appdirs==1.4.3
+Beaker==1.8.1
+cycler==0.10.0
+kiwisolver==1.0.1
+Mako==1.0.7
+MarkupSafe==1.0
+matplotlib==2.2.0
+meson==0.44.0
+numpy==1.14.2
+packaging==16.8
+pygobject==3.26.1
+pyparsing==2.2.0
+python-dateutil==2.7.0
+pytz==2017.3
+six==1.11.0
+team==1.0
+virtualenv==15.2.0
