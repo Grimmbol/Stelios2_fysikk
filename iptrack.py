@@ -22,6 +22,7 @@ import numpy as np
 
 def iptrack(filename, degree):
 	data=np.loadtxt(filename,skiprows=2)
+	#print(data)
 	return np.polyfit(data[:,1],data[:,2],degree)
 
 # trvalues - track values
