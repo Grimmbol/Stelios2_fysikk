@@ -22,9 +22,6 @@ def polynomial(coefs, x):
 def potential_energy(h):
     return mass_ball * grav_constant * h
 
-#Take a folder, and a number of files to read. Expected naming: data_n
-
-
 def plot_energy_fit_with_scatter(fitted):
     #Draw the regression function
     t = np.linspace(0, 10, 500)
@@ -36,7 +33,7 @@ def plot_energy_fit_with_scatter(fitted):
     for i in range(1, num_data_files+1):
         data = np.loadtxt("./" + data_loc +"/data_"+str(i),skiprows=1)
         ydata = []
-        tdata = [] 
+        tdata = []
 
         for line in data:
             ydata.append(potential_energy(line[1]))
@@ -50,13 +47,17 @@ def plot_y_fit(fitted):
 
      plt.plot(t, y, label="regression")
 
-#Plots normal force
 def plot_normal_force(data):
-   
     normal_series = generate_normal_force(data)
 
-    plt.plot(data[0], data[2])    
-    plt.plot(data[0], normal_series)
+    #plt.plot(data[0], data[2])    
+    plt.plot(data[1], normal_series)
+
+def plot_friction_force(data):
+    friction_series = generate_friction_force(data)
+
+    #plt.plot(data[0], data[2])
+    plt.plot(data[1], friction_series)
 
 
 def plot_friction(track_data, euler_data):
@@ -69,15 +70,21 @@ def plot_friction(track_data, euler_data):
 # - The normal force over time, plotted for both numeric and observed
 # - The friction force over time, for both numeric and observed
 # - The air drag over time, for both numeric and observed
+# Make the regression only depend on lambda, with the constant set by the tracker
+# data
 
 def main():
     #First, generate the data needed. These methods are defined in data_generator.py
-    avg_data = generate_avg_data("Tracker", 7)
+    avg_data = generate_avg_data("Tracker", 1)
     fitted = exp_fit_avg("energidata", num_data_files)
     num_res = generate_numeric_data("Tracker", 1)
     
     #Then call plotting subroutines as needed
     plot_normal_force(num_res)
+    plot_friction_force(num_res)
+    
+    #plt.plot(avg_data[0], avg_data[2])
+    #plt.plot(num_res[0], num_res[2])
 
     #Finally, show the plots
     plt.show()
