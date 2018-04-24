@@ -41,8 +41,8 @@
                 <property name="xorigin" type="double">178.4476262245667</property>
                 <property name="yorigin" type="double">642.6224566691786</property>
                 <property name="angle" type="double">0.0</property>
-                <property name="xscale" type="double">9.067196843678982</property>
-                <property name="yscale" type="double">9.067196843678982</property>
+                <property name="xscale" type="double">906.7196843678981</property>
+                <property name="yscale" type="double">906.7196843678981</property>
             </object>
             </property>
         </property>
@@ -94,7 +94,7 @@
                 </property>
             </property>
             <property name="worldlengths" type="array" class="[Ljava.lang.Double;">
-                <property name="[0]" type="double">100.0</property>
+                <property name="[0]" type="double">1.0</property>
             </property>
         </object>
         </property>
@@ -5848,9 +5848,9 @@
         </object>
         </property>
     </property>
-    <property name="selectedtrack" type="string">mass A</property>
+    <property name="selectedtrack" type="string">calibration stick A</property>
     <property name="dividers" type="array" class="[D">
-        <property name="array" type="string">{0.7012098895318254,0.5011363636363636,1.0,0.3498158863755918}</property>
+        <property name="array" type="string">{0.7012098895318254,0.5,1.0,0.3498158863755918}</property>
     </property>
     <property name="selected_views" type="array" class="[Ljava.lang.String;">
         <property name="[0]" type="string">Plot View</property>

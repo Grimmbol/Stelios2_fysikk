@@ -17,13 +17,10 @@ def polynomial(coefs, x):
 
     return result
 
-def potential_energy(h):
-    return mass_ball * grav_constant * h
-
 def plot_energy_fit_with_scatter(fitted):
     #Draw the regression function
     t = np.linspace(0, max_duration, 500)
-    y = potential_energy(exp_func_const(t, fitted[0]) )
+    y = potential_energy(exp_func_const(t, fitted[0]))
 
     plt.plot(t, y, label="regression")
     
@@ -61,8 +58,9 @@ def plot_height_with_scatter(fitted):
 def plot_y_fit(fitted):
      t = np.linspace(0,10,500)
      y = exp_func(t, fitted[0], fitted[1])
-
-     plt.plot(t, y, label="regression")
+     
+     fig = plt.figure()
+     fig.plot(t, y, label="regression")
 
 def plot_normal_force(data):
     normal_series = generate_normal_force(data)
@@ -86,25 +84,18 @@ def plot_friction_force(data):
 
 def main():
     #First, generate the data needed. These methods are defined in data_generator.py
-    avg_data = generate_avg_data("Tracker", 5)
-    #num_res = generate_numeric_data("Tracker", 1)
-    #set_global(avg_data[2][0])
-    #print("glob_C set to " + str(glob_C))
+    avg_data = generate_avg_data("Tracker", 36)
+    #num_res = generate_avg_num_data("Tracker", 3)
+    set_global(avg_data[2][0])
     
-    #fitted = exp_fit_avg("energidata", num_data_files)
+    fitted = exp_fit_avg("energidata", num_data_files)
     
-    #Then call plotting subroutines as needed
-    #plot_normal_force(num_res)
-    #plot_friction_force(num_res)
-
     #plt.plot(avg_data[0], avg_data[2])
-    plt.plot(avg_data[0], avg_data[3])
     
-    errors = find_error(avg_data, "Tracker", 3)
-    
-    #plot_energy_fit_with_scatter(fitted)
+    plot_energy_fit_with_scatter(fitted)
     #plot_height_with_scatter(fitted)
     #Finally, show the plots
+    
     plt.show()
-
+    
 main()

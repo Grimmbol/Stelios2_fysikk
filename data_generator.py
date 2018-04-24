@@ -7,12 +7,13 @@ import numpy as np
 euler_step_len = 0.0005
 fric_const = 0.00145
 
-glob_C = 1
+#All right, I give up. Let's use a dictionary instead
+glob_C = {'C':1}
 
 #Constants relating to files
 tracker_path = "Tracker"
 data_loc = "energidata"
-num_data_files = 35
+num_data_files = 36
 max_duration = 11 #in seconds
 
 #Physical constant values
@@ -24,8 +25,7 @@ inertia_ball = (3/2)*(mass_ball)*radius_ball**2
 spacing_track_supports = 0.20 #+- 0.3
 
 def set_global(C):
-    global glob_C
-    glob_C = C
+    glob_C['C'] = C
 
 #The exponential function we are trying to fit.
 def exp_func(t,C,lam):
@@ -33,7 +33,10 @@ def exp_func(t,C,lam):
 
 #Try to use this for fit, unneccesary to use least squares to find C
 def exp_func_const(t, lam):
-    return glob_C*np.exp(lam*t)
+    return glob_C['C']*np.exp(lam*t)
+
+def potential_energy(h):
+    return mass_ball * grav_constant * h
 
 #Returns a list of tuples containing the error of each parameter
 def find_error(avg, folder, number):
@@ -81,6 +84,7 @@ def generate_avg_data(folder, number):
     for i in range(1, number+1):
         current_set = ([],[],[],[])
         data = np.loadtxt(folder+"/v"+str(i)+"_track", skiprows=2)
+        print("Start no " + str(i) + ":" + str(data[0][2]))
         line_counter = 0
         for line in data:
             if line_counter >= len(count_list):
@@ -109,34 +113,36 @@ def generate_avg_data(folder, number):
         
             line_counter += 1
         temp.append(current_set)
-    print(count_list)
     
     #Stores the final sequence, properly averaged
-    result = ([0 for i in range(len(count_list))],
-              [0 for i in range(len(count_list))],
-              [0 for i in range(len(count_list))],
-              [0 for i in range(len(count_list))])
+    result = ([], [], [], [])
 
     #Take average
     #Usual format: t, x, y, v
     for set in temp:
        for i in range(len(set[0])):
-           result[0][i] += set[0][i]
-           result[1][i] += set[1][i]
-           result[2][i] += set[2][i]
-           result[3][i] += set[3][i]
-       
+           try:
+               result[0][i] += set[0][i]
+               result[1][i] += set[1][i]
+               result[2][i] += set[2][i]
+               result[3][i] += set[3][i]
+           except:
+               result[0].append(set[0][i])
+               result[1].append(set[1][i])
+               result[2].append(set[2][i])
+               result[3].append(set[3][i])
 
     for i in range(len(count_list)):
         result[0][i] /= count_list[i]
         result[1][i] /= count_list[i]
         result[2][i] /= count_list[i]
-        result[3][i] /= count_list[i]
-    
+        result[3][i] /= count_list[i]    
+  
     return(result)
 
+
 #Generates numeric data using eulers explicit method. Averages all results
-def generate_numeric_data(folder, number):
+def generate_avg_num_data(folder, number):
 
     #A tuple to store the numeric results. Format (t, x, y, v)
     num_res = ([],[],[],[])

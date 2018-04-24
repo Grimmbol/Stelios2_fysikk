@@ -5,12 +5,12 @@
     <property name="height" type="double">720.0</property>
     <property name="magnification" type="double">0.5</property>
     <property name="center_x" type="int">663</property>
-    <property name="center_y" type="int">413</property>
+    <property name="center_y" type="int">421</property>
     <property name="videoclip" type="object">
     <object class="org.opensourcephysics.media.core.VideoClip">
         <property name="video" type="object">
         <object class="org.opensourcephysics.media.xuggle.XuggleVideo">
-            <property name="path" type="string">../../../../Downloads/Fysikkfilmer/V32.MP4</property>
+            <property name="path" type="string">../../Video/opptak2/V32.MP4</property>
         </object>
         </property>
         <property name="video_framecount" type="int">1020</property>
@@ -41,8 +41,8 @@
                 <property name="xorigin" type="double">176.5</property>
                 <property name="yorigin" type="double">640.25</property>
                 <property name="angle" type="double">0.0</property>
-                <property name="xscale" type="double">9.110049396133922</property>
-                <property name="yscale" type="double">9.110049396133922</property>
+                <property name="xscale" type="double">911.0049396133923</property>
+                <property name="yscale" type="double">911.0049396133923</property>
             </object>
             </property>
         </property>
@@ -94,7 +94,7 @@
                 </property>
             </property>
             <property name="worldlengths" type="array" class="[Ljava.lang.Double;">
-                <property name="[0]" type="double">100.0</property>
+                <property name="[0]" type="double">1.0</property>
             </property>
         </object>
         </property>
@@ -5866,9 +5866,9 @@
         </object>
         </property>
     </property>
-    <property name="selectedtrack" type="string">mass A</property>
+    <property name="selectedtrack" type="string">calibration stick A</property>
     <property name="dividers" type="array" class="[D">
-        <property name="array" type="string">{0.7012098895318254,0.500578034682081,1.0,0.3498158863755918}</property>
+        <property name="array" type="string">{0.7012098895318254,0.5,1.0,0.3498158863755918}</property>
     </property>
     <property name="selected_views" type="array" class="[Ljava.lang.String;">
         <property name="[0]" type="string">Plot View</property>
