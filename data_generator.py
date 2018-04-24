@@ -33,11 +33,16 @@ def exp_func(t,C,lam):
 
 #Try to use this for fit, unneccesary to use least squares to find C
 def exp_func_const(t, lam):
-    print("Evaluating the constant function " + str(glob_C))
     return glob_C*np.exp(lam*t)
 
-def find_error_C():
-    pass
+#Returns a list of tuples containing the error of each parameter
+def find_error(avg, folder, number):
+    
+    
+    for i in range(1, number+1):
+        data = np.loadtxt(folder+"/v"+str(i)+"_track", skiprows=2)
+        
+    
     
 #Returns a list with the normal force for each data point in the given data
 def generate_normal_force(data):
@@ -69,42 +74,66 @@ def generate_friction_force(data):
 #Iterates over the chosen number of files in increasing order, taking the
 #average as it works its way through
 def generate_avg_data(folder, number):
-    tvals = []
-    xvals = []
-    yvals = []
-    vvals = []
-    
+   
+    #A list of datasets
+    temp = []
+    count_list = []
     for i in range(1, number+1):
-        data = np.loadtxt(tracker_path+"/v"+str(i)+"_track", skiprows=2)
+        current_set = ([],[],[],[])
+        data = np.loadtxt(folder+"/v"+str(i)+"_track", skiprows=2)
         line_counter = 0
         for line in data:
-            #This needs to be a difference
+            if line_counter >= len(count_list):
+                count_list.append(1)
+            else:
+                count_list[line_counter] += 1
+            
             try:
                 vel = (np.sqrt(
-                              ((line[1]-xvals[line_counter-1])**2)+
-                              ((line[2]-yvals[line_counter-1])**2))
-                       /(line[0]-tvals[line_counter-1]))
+                              ((line[1]-current_set[1][line_counter-1])**2)+
+                              ((line[2]-current_set[2][line_counter-1])**2))
+                       /(line[0]-current_set[0][line_counter-1]))
             except:
                 vel = 0
             try:
-                tvals[line_counter] += line[0]
-                xvals[line_counter] += line[1]
-                yvals[line_counter] += line[2]
-                vvals[line_counter] += vel
-                #take average
-                tvals[line_counter] /= 2
-                xvals[line_counter] /= 2
-                yvals[line_counter] /= 2
-                vvals[line_counter] /= 2
+                current_set[0][line_counter] += line[0]
+                current_set[1][line_counter] += line[1]
+                current_set[2][line_counter] += line[2]
+                current_set[3][line_counter] += vel
+
             except:
-                tvals.append(line[0])
-                xvals.append(line[1])
-                yvals.append(line[2])
-                vvals.append(vel)
+                current_set[0].append(line[0])
+                current_set[1].append(line[1])
+                current_set[2].append(line[2])
+                current_set[3].append(vel)
         
             line_counter += 1
+        temp.append(current_set)
+    print(count_list)
     
-    return(tvals, xvals, yvals, vvals)
+    #Stores the final sequence, properly averaged
+    result = ([0 for i in range(len(count_list))],
+              [0 for i in range(len(count_list))],
+              [0 for i in range(len(count_list))],
+              [0 for i in range(len(count_list))])
+
+    #Take average
+    #Usual format: t, x, y, v
+    for set in temp:
+       for i in range(len(set[0])):
+           result[0][i] += set[0][i]
+           result[1][i] += set[1][i]
+           result[2][i] += set[2][i]
+           result[3][i] += set[3][i]
+       
+
+    for i in range(len(count_list)):
+        result[0][i] /= count_list[i]
+        result[1][i] /= count_list[i]
+        result[2][i] /= count_list[i]
+        result[3][i] /= count_list[i]
+    
+    return(result)
 
 #Generates numeric data using eulers explicit method. Averages all results
 def generate_numeric_data(folder, number):
@@ -116,9 +145,9 @@ def generate_numeric_data(folder, number):
     for i in range(1, number+1):
         new_num_res = ([],[],[],[])
         tdata = np.linspace(0,max_duration,max_duration/euler_step_len)
-        tracker_data = np.loadtxt(tracker_path+"/v"+str(i)+"_track", skiprows=2)
+        tracker_data = np.loadtxt(folder+"/v"+str(i)+"_track", skiprows=2)
 
-        polynomial = iptrack(tracker_path+"/v"+str(i)+"_track", 15)
+        polynomial = iptrack(folder+"/v"+str(i)+"_track", 15)
 
         #Set up our start positions
         cur_x = tracker_data[0][1]
@@ -149,10 +178,10 @@ def generate_numeric_data(folder, number):
         else:
             diff = len(new_num_res[0])-len(num_res[0])
             for i in range(min(len(new_num_res[0]), len(num_res[0]))):
-                num_res[0][i] += new_num_res[0][i];num_res[0][i] /= 2
-                num_res[1][i] += new_num_res[1][i];num_res[1][i] /= 2
-                num_res[2][i] += new_num_res[2][i];num_res[2][i] /= 2
-                num_res[3][i] += new_num_res[3][i];num_res[3][i] /= 2
+                num_res[0][i] += new_num_res[0][i]#;num_res[0][i] /= 2
+                num_res[1][i] += new_num_res[1][i]#;num_res[1][i] /= 2
+                num_res[2][i] += new_num_res[2][i]#;num_res[2][i] /= 2
+                num_res[3][i] += new_num_res[3][i]#;num_res[3][i] /= 2
             
             
     return num_res

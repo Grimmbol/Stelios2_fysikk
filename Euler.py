@@ -86,20 +86,21 @@ def plot_friction_force(data):
 
 def main():
     #First, generate the data needed. These methods are defined in data_generator.py
-    avg_data = generate_avg_data("Tracker", 1)
-    num_res = generate_numeric_data("Tracker", 1)
+    avg_data = generate_avg_data("Tracker", 5)
+    #num_res = generate_numeric_data("Tracker", 1)
+    #set_global(avg_data[2][0])
+    #print("glob_C set to " + str(glob_C))
     
-    set_global(avg_data[2][0])
-    print("glob_C set to " + str(glob_C))
-    
-    fitted = exp_fit_avg("energidata", num_data_files)
+    #fitted = exp_fit_avg("energidata", num_data_files)
     
     #Then call plotting subroutines as needed
     #plot_normal_force(num_res)
     #plot_friction_force(num_res)
 
-    plt.plot(num_res[0], num_res[2])
-    plt.plot(avg_data[0], avg_data[2])
+    #plt.plot(avg_data[0], avg_data[2])
+    plt.plot(avg_data[0], avg_data[3])
+    
+    errors = find_error(avg_data, "Tracker", 3)
     
     #plot_energy_fit_with_scatter(fitted)
     #plot_height_with_scatter(fitted)
