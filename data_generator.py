@@ -7,9 +7,7 @@ import numpy as np
 euler_step_len = 0.0005
 fric_const = 0.00145
 
-#The average of the start positions is used as scaling constant in the
-#exponential energy fit
-glob_C = 0
+glob_C = 1
 
 #Constants relating to files
 tracker_path = "Tracker"
@@ -25,15 +23,22 @@ radius_ball = 0.0375 #-+ 0.05 mm
 inertia_ball = (3/2)*(mass_ball)*radius_ball**2
 spacing_track_supports = 0.20 #+- 0.3
 
+def set_global(C):
+    global glob_C
+    glob_C = C
+
 #The exponential function we are trying to fit.
 def exp_func(t,C,lam):
     return C*np.exp(lam*t)
 
 #Try to use this for fit, unneccesary to use least squares to find C
 def exp_func_const(t, lam):
-    global glob_C
+    print("Evaluating the constant function " + str(glob_C))
     return glob_C*np.exp(lam*t)
 
+def find_error_C():
+    pass
+    
 #Returns a list with the normal force for each data point in the given data
 def generate_normal_force(data):
     polynomial = np.polyfit(data[1], data[2], 15)
@@ -154,7 +159,7 @@ def generate_numeric_data(folder, number):
 
 def exp_fit_avg(folder, number):
     lam, err = (0, 0)
-    global glob_C 
+    global glob_C
     for i in range(1, number+1):
         data = np.loadtxt("./" + str(folder)+"/data_"+str(i),skiprows=1)
         ydata = []
@@ -164,8 +169,6 @@ def exp_fit_avg(folder, number):
             ydata.append(line[1])
             tdata.append(line[0])
         
-        glob_C += ydata[0]
-        glob_C /= 2
         result = curve_fit(exp_func_const, xdata=tdata, ydata=ydata)
         #Update global constant
         lam += result[0][0]

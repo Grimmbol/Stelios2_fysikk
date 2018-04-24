@@ -39,6 +39,25 @@ def plot_energy_fit_with_scatter(fitted):
 
         plt.scatter(tdata, ydata)
 
+def plot_height_with_scatter(fitted):
+     #Draw the regression function
+    t = np.linspace(0, max_duration, 500)
+    y = exp_func_const(t, fitted[0])
+
+    plt.plot(t, y, label="regression")
+    
+    #Generate scatterplot of all data,
+    for i in range(1, num_data_files+1):
+        data = np.loadtxt("./" + data_loc +"/data_"+str(i),skiprows=1)
+        ydata = []
+        tdata = []
+
+        for line in data:
+            ydata.append(line[1])
+            tdata.append(line[0])
+
+        plt.scatter(tdata, ydata)
+
 def plot_y_fit(fitted):
      t = np.linspace(0,10,500)
      y = exp_func(t, fitted[0], fitted[1])
@@ -47,15 +66,15 @@ def plot_y_fit(fitted):
 
 def plot_normal_force(data):
     normal_series = generate_normal_force(data)
-
+    
     #plt.plot(data[0], data[2])    
-    plt.plot(data[1], normal_series)
+    plt.plot(data[0], normal_series)
 
 def plot_friction_force(data):
     friction_series = generate_friction_force(data)
 
     #plt.plot(data[0], data[2])
-    plt.plot(data[1], friction_series)
+    plt.plot(data[0], friction_series)
 
 #TODO plot:
 # - The total energy and the regression
@@ -65,22 +84,25 @@ def plot_friction_force(data):
 # - The friction force over time, for both numeric and observed
 # - The air drag over time, for both numeric and observed
 
-
 def main():
     #First, generate the data needed. These methods are defined in data_generator.py
     avg_data = generate_avg_data("Tracker", 1)
-    fitted = exp_fit_avg("energidata", num_data_files)
     num_res = generate_numeric_data("Tracker", 1)
+    
+    set_global(avg_data[2][0])
+    print("glob_C set to " + str(glob_C))
+    
+    fitted = exp_fit_avg("energidata", num_data_files)
     
     #Then call plotting subroutines as needed
     #plot_normal_force(num_res)
     #plot_friction_force(num_res)
-    
-    plot_energy_fit_with_scatter(fitted)
-    
-    #plt.plot(avg_data[0], avg_data[2])
-    #plt.plot(num_res[0], num_res[2])
 
+    plt.plot(num_res[0], num_res[2])
+    plt.plot(avg_data[0], avg_data[2])
+    
+    #plot_energy_fit_with_scatter(fitted)
+    #plot_height_with_scatter(fitted)
     #Finally, show the plots
     plt.show()
 
