@@ -1,6 +1,6 @@
 from iptrack import *
 from scipy.optimize import curve_fit
-
+import math
 import numpy as np
 
 #Numerical constants
@@ -37,6 +37,32 @@ def exp_func_const(t, lam):
 
 def potential_energy(h):
     return mass_ball * grav_constant * h
+
+def unc_W(num_points):
+    total = 0
+
+    for t in range(num_points):
+       
+        m = 2.9/1000 
+        g = 9.822
+        c = 0.1370
+        l = -0.21
+        
+        Dm = 0.1/1000
+        Dg = 0.001
+        Dc = 0.0003
+        Dl = 0.09
+
+        Derm = (g*c*math.exp(l*t)*Dm)
+        Derg = (m*c*math.exp(l*t)*Dg)
+        Derc = (g*m*math.exp(l*t)*Dc)
+        Derl = (t*g*m*c*math.exp(l*t)*Dl)
+        
+        ans = math.sqrt(Derm**2 + Derg**2 + Derc**2 + Derl**2)
+        total += ans
+
+    return total/num_points
+    #print(func)
 
 #Returns a list of tuples containing the error of each parameter
 def find_error(avg, folder, number):

@@ -107,28 +107,31 @@ def plot_error_y(data, errors):
 def main():
     #First, generate the data needed. These methods are defined in data_generator.py
     avg_data, errors = generate_avg_data("Tracker", 36)
-    num_res = generate_avg_num_data("Tracker", 36)
+    #num_res = generate_avg_num_data("Tracker", 36)
     
     #print(errors)
     
+    print(unc_W(500))
+   
+
     set_global(avg_data[2][0])
     print("C is " + str(avg_data[2][0]) + " with standard error " + str(errors[1][0]))
     fitted = exp_fit_avg("energidata", num_data_files)
     
     #avg_data_normal = generate_normal_force(avg_data)
-    avg_num_data_normal = generate_normal_force(num_res)
+    #avg_num_data_normal = generate_normal_force(num_res)
 
     #avg_data_friction = generate_friction_force(avg_data)
-    avg_num_data_friction  = generate_friction_force(num_res)
+    #avg_num_data_friction  = generate_friction_force(num_res)
 
-    plt.plot(num_res[0], num_res[2])
-    plt.plot(num_res[0], avg_num_data_normal)
-    plt.plot(num_res[0], avg_num_data_friction)
+    #plt.plot(num_res[0], num_res[2])
+    #plt.plot(num_res[0], avg_num_data_normal)
+    #plt.plot(num_res[0], avg_num_data_friction)
 
     #plot_error_y(avg_data, errors)
     #print(errors[3])
     
-    #plot_energy_fit_with_scatter(fitted)
+    plot_energy_fit_with_scatter(fitted)
     #plot_height_with_scatter(fitted)
     #Finally, show the plots
     plt.show()
