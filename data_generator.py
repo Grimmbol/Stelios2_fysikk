@@ -5,7 +5,7 @@ import numpy as np
 
 #Numerical constants
 euler_step_len = 0.0005
-fric_const = 0.00145
+fric_const = 0.00150
 
 #All right, I give up. Let's use a dictionary instead
 glob_C = {'C':1}
@@ -145,6 +145,8 @@ def generate_avg_num_data(folder, number):
 
     #A tuple to store the numeric results. Format (t, x, y, v)
     num_res = ([],[],[],[])
+    temp = []
+    count_list = []
    
     #A loop doing the euler estimation, and averaging the results
     for i in range(1, number+1):
@@ -159,7 +161,14 @@ def generate_avg_num_data(folder, number):
         cur_y = tracker_data[0][2]
         cur_v = 0
         
+        line_counter = 0
+        
         for point in tdata:
+            if line_counter >= len(count_list):
+                count_list.append(1)
+            else:
+                count_list[line_counter] += 1
+
             y, dydx, d2ydx2, alpha, R = trvalues(polynomial, cur_x)
             
             new_num_res[0].append(point)
@@ -176,18 +185,37 @@ def generate_avg_num_data(folder, number):
                   + (mass_ball*grav_constant*np.sin(alpha)-(fric_const*cur_v))
                   / (mass_ball + (inertia_ball/(radius_ball**2)))
                   *  euler_step_len)
-        
-        #Average out the new result with the old ones
-        if(len(num_res[0]) == 0):
-            num_res = new_num_res
-        else:
-            diff = len(new_num_res[0])-len(num_res[0])
-            for i in range(min(len(new_num_res[0]), len(num_res[0]))):
-                num_res[0][i] += new_num_res[0][i]#;num_res[0][i] /= 2
-                num_res[1][i] += new_num_res[1][i]#;num_res[1][i] /= 2
-                num_res[2][i] += new_num_res[2][i]#;num_res[2][i] /= 2
-                num_res[3][i] += new_num_res[3][i]#;num_res[3][i] /= 2
             
+            line_counter +=1
+
+        #Turn all to abs value
+        for i in range(len(new_num_res[0])):
+            new_num_res[3][i] = abs(new_num_res[3][i])
+            
+        #Add data to collection
+        temp.append(new_num_res)
+
+    for set in temp:
+        for i in range(len(set[0])):
+            try:
+                num_res[0][i] += set[0][i]
+                num_res[1][i] += set[1][i]
+                num_res[2][i] += set[2][i]
+                num_res[3][i] += set[3][i]
+            except:
+                num_res[0].append(set[0][i])
+                num_res[1].append(set[1][i])
+                num_res[2].append(set[2][i])
+                num_res[3].append(set[3][i])
+   
+    #print(count_list)
+    
+    for i in range(len(num_res[0])):
+        print(i)
+        num_res[0][i] /= count_list[i]
+        num_res[1][i] /= count_list[i]
+        num_res[2][i] /= count_list[i]
+        num_res[3][i] /= count_list[i]
             
     return num_res
 

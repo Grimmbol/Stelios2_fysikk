@@ -88,17 +88,17 @@ def plot_friction_force(data):
 def main():
     #First, generate the data needed. These methods are defined in data_generator.py
     avg_data = generate_avg_data("Tracker", 36)
-    #num_res = generate_avg_num_data("Tracker", 3)
-    set_global(avg_data[2][0])
+    num_res = generate_avg_num_data("Tracker", 36)
     
-    fitted = exp_fit_avg("energidata", num_data_files)
+    #set_global(avg_data[2][0])
+    #fitted = exp_fit_avg("energidata", num_data_files)
     
-    #plt.plot(avg_data[0], avg_data[2])
+    plt.plot(avg_data[1], avg_data[2])
+    plt.plot(num_res[1], num_res[2])
     
-    plot_energy_fit_with_scatter(fitted)
+    #plot_energy_fit_with_scatter(fitted)
     #plot_height_with_scatter(fitted)
     #Finally, show the plots
-    plt.savefig("Lin_Reg_W(t).svg")
     plt.show()
     
 main()
