@@ -18,7 +18,7 @@ max_duration = 11 #in seconds
 
 #Physical constant values
 mass_ball = 0.0029 #+- 0.05 grams 
-grav_constant = 9.80665 #+- 0.000005 #Was originally 9.8665. Migth want to recalc
+grav_constant = 9.822 #+- 0.001 #Was originally 9.8665. Migth want to recalc
 radius_ball = 0.0375 #-+ 0.05 mm 
 #The ball is modeled with an infinitly thin shell
 inertia_ball = (3/2)*(mass_ball)*radius_ball**2
@@ -142,7 +142,6 @@ def generate_avg_data(folder, number):
     #x, y, v
     sum_errors = [[],[],[]]
     for i in range(len(temp)):
-        print("Avvik C = " + str(((temp[i][1][0] - result[1][i])**2)))
         for j in range(len(temp[i][0])):
             try:
                 sum_errors[0][j] += ((temp[i][1][j] - result[1][j])**2)
