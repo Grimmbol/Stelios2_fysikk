@@ -18,7 +18,7 @@ max_duration = 11 #in seconds
 
 #Physical constant values
 mass_ball = 0.0029 #+- 0.05 grams 
-grav_constant = 9.8665
+grav_constant = 9.80665 #+- 0.000005 #Was originally 9.8665. Migth want to recalc
 radius_ball = 0.0375 #-+ 0.05 mm 
 #The ball is modeled with an infinitly thin shell
 inertia_ball = (3/2)*(mass_ball)*radius_ball**2
@@ -136,8 +136,51 @@ def generate_avg_data(folder, number):
         result[1][i] /= count_list[i]
         result[2][i] /= count_list[i]
         result[3][i] /= count_list[i]    
-  
-    return(result)
+    
+    #Now to estimate the standard error per point per parameter(not time)
+    #Remember, the "result" array contains the averages at this point
+    #x, y, v
+    sum_errors = [[],[],[]]
+    for i in range(len(temp)):
+        print("Avvik C = " + str(((temp[i][1][0] - result[1][i])**2)))
+        for j in range(len(temp[i][0])):
+            try:
+                sum_errors[0][j] += ((temp[i][1][j] - result[1][j])**2)
+                sum_errors[1][j] += ((temp[i][2][j] - result[2][j])**2)
+                sum_errors[2][j] += ((temp[i][3][j] - result[3][j])**2)
+            except:
+                sum_errors[0].append((temp[i][1][j] - result[1][j])**2)
+                sum_errors[1].append((temp[i][2][j] - result[2][j])**2)
+                sum_errors[2].append((temp[i][3][j] - result[3][j])**2)
+    
+    #Find standard deviation, and then standard error
+    for i in range(len(count_list)):
+        N = count_list[i]
+        if(N>1):
+            sum_errors[0][i] = np.sqrt((1/(N-1)*(sum_errors[0][i])))
+            sum_errors[1][i] = np.sqrt((1/(N-1)*(sum_errors[1][i])))
+            sum_errors[2][i] = np.sqrt((1/(N-1)*(sum_errors[2][i])))
+            
+            sum_errors[0][i] = sum_errors[0][i]/np.sqrt(N)
+            sum_errors[1][i] = sum_errors[1][i]/np.sqrt(N)
+            sum_errors[2][i] = sum_errors[2][i]/np.sqrt(N)
+   
+    
+    #Finally, add the average error for each parameter to the error list
+    #x,y,v
+    err_avg = [0,0,0]
+    for i in range(len(sum_errors[0])):
+        err_avg[0] += sum_errors[0][i]
+        err_avg[1] += sum_errors[1][i]
+        err_avg[2] += sum_errors[2][i]
+
+    err_avg[0] /= len(sum_errors[0])
+    err_avg[1] /= len(sum_errors[0])
+    err_avg[2] /= len(sum_errors[0])
+    
+    sum_errors.append(err_avg)
+    
+    return(result, sum_errors)
 
 
 #Generates numeric data using eulers explicit method. Averages all results
