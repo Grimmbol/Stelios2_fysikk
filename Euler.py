@@ -21,7 +21,7 @@ def plot_energy_fit_with_scatter(fitted):
     #Draw the regression function
     t = np.linspace(0, max_duration, 500)
     y = potential_energy(exp_func_const(t, fitted[0]))
-
+    
     plt.plot(t, y, label="regression")
     
     #Generate scatterplot of all data,
@@ -35,6 +35,9 @@ def plot_energy_fit_with_scatter(fitted):
             tdata.append(line[0])
 
         plt.scatter(tdata, ydata)
+
+    #Print the standard error
+    print("Standard error for lambda is " + str(np.sqrt(np.diag(fitted[1]))))
 
 def plot_height_with_scatter(fitted):
      #Draw the regression function
@@ -95,7 +98,7 @@ def main():
     plot_energy_fit_with_scatter(fitted)
     #plot_height_with_scatter(fitted)
     #Finally, show the plots
-    
+    plt.savefig("Lin_Reg_W(t).svg")
     plt.show()
     
 main()

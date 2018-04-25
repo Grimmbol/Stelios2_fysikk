@@ -84,7 +84,6 @@ def generate_avg_data(folder, number):
     for i in range(1, number+1):
         current_set = ([],[],[],[])
         data = np.loadtxt(folder+"/v"+str(i)+"_track", skiprows=2)
-        print("Start no " + str(i) + ":" + str(data[0][2]))
         line_counter = 0
         for line in data:
             if line_counter >= len(count_list):
